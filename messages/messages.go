@@ -168,13 +168,13 @@ func (ms *MessageStore) ListFinished() []*Message {
 func (ms *MessageStore) Close() {
 	for _, msg := range ms.inProgress {
 		if msg.Status == MessageStatusPending {
-			ms.Push(Update{
+			ms.Push(Update{ //nolint:errcheck
 				Key:    msg.Key,
 				Status: MessageStatusSkipped,
 			})
 		}
 		if msg.Status == MessageStatusStarted {
-			ms.Push(Update{
+			ms.Push(Update{ //nolint:errcheck
 				Key:    msg.Key,
 				Status: MessageStatusUnknown,
 			})

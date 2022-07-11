@@ -14,6 +14,7 @@ type Progress struct {
 	store      *messages.MessageStore
 	renderer   *messages.MessageRenderer
 	updateChan chan messages.Update
+	errorChan  chan error
 	stopChan   chan bool
 	doneChan   chan bool
 }
@@ -24,6 +25,7 @@ func NewProgress(config OutputConfig) *Progress {
 		store:      messages.NewMessageStore(),
 		renderer:   messages.NewMessageRenderer(messages.OutputConfig(config)),
 		updateChan: make(chan messages.Update),
+		errorChan:  make(chan error),
 		stopChan:   make(chan bool),
 		doneChan:   make(chan bool),
 	}
@@ -33,15 +35,16 @@ func (p Progress) run() {
 	ticker := time.NewTicker(time.Millisecond * 95)
 	defer ticker.Stop()
 
+RunLoop:
 	for {
 		select {
 		case <-p.stopChan:
 			p.store.Close()
 			p.renderer.RenderMessageStore(p.store)
 			p.doneChan <- true
-			break
+			break RunLoop
 		case update := <-p.updateChan:
-			p.store.Push(update)
+			p.errorChan <- p.store.Push(update)
 		case <-ticker.C:
 			p.renderer.RenderMessageStore(p.store)
 		}
@@ -54,8 +57,9 @@ func (p Progress) Start() {
 }
 
 // Push updates to the progress log.
-func (p Progress) Push(update messages.Update) {
+func (p Progress) Push(update messages.Update) error {
 	p.updateChan <- update
+	return <-p.errorChan
 }
 
 // Stop the goroutine handling progress logging and render the final progress state.

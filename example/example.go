@@ -16,7 +16,7 @@ func main() {
 	taskLog.Start()
 	defer taskLog.Stop()
 
-	taskLog.Push(messages.Update{
+	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "first-example",
 		Message: "Example message",
 		Status:  messages.MessageStatusStarted,
@@ -24,7 +24,7 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{
+	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "parallel-example",
 		Message: "Example message running in parallel",
 		Status:  messages.MessageStatusStarted,
@@ -32,7 +32,7 @@ func main() {
 
 	time.Sleep(time.Second * 3)
 
-	taskLog.Push(messages.Update{
+	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "first-example",
 		Message: "Updated example message",
 		Status:  messages.MessageStatusStarted,
@@ -40,7 +40,7 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{
+	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "parallel-example",
 		Status:  messages.MessageStatusError,
 		Details: "Error: Message details can be used, for example, to communicate error messages to the user.",
@@ -48,7 +48,7 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{
+	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "unknown-example",
 		Status:  messages.MessageStatusStarted,
 		Message: "If message has started status when log is closed, its status is set to unknown",
@@ -56,7 +56,7 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{
+	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "first-example",
 		Message: "Finished example message",
 		Status:  messages.MessageStatusSuccess,
@@ -64,7 +64,7 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{
+	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "long",
 		Message: "Long messages are truncated - " + loremIpsum,
 		Details: loremIpsum,
@@ -73,7 +73,7 @@ func main() {
 
 	time.Sleep(time.Second * 3)
 
-	taskLog.Push(messages.Update{
+	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:    "long",
 		Status: messages.MessageStatusWarning,
 	})
