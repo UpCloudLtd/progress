@@ -47,6 +47,7 @@ func TestMessageGroup_ListInProgress_ListFinished(t *testing.T) {
 
 	assert.NoError(t, ms.Push(Update{Message: "2nd", Status: MessageStatusPending}))
 	assert.NoError(t, ms.Push(Update{Message: "1st", Status: MessageStatusStarted}))
+	time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
 	assert.NoError(t, ms.Push(Update{Message: "2nd", Status: MessageStatusStarted}))
 
 	messages := ms.ListInProgress()
@@ -71,13 +72,16 @@ func TestMessageStore_Push_UpdatesMessage(t *testing.T) {
 	assert.True(t, msg.Finished.IsZero())
 
 	tic := time.Now()
+	time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
 	assert.NoError(t, ms.Push(Update{Key: "test", Message: "Still testing", Status: MessageStatusStarted}))
 
 	assert.Equal(t, "Still testing", msg.Message)
 	assert.True(t, tic.Before(msg.Started))
 	assert.True(t, msg.Finished.IsZero())
 
+	time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
 	toc := time.Now()
+	time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
 	assert.NoError(t, ms.Push(Update{Key: "test", Status: MessageStatusError, Details: "Test details"}))
 
 	assert.Equal(t, "Still testing", msg.Message)
