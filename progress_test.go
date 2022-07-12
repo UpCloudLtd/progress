@@ -23,6 +23,32 @@ func TestProgress_Push_ErrorChannel(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestProgress_Start_PanicsIfCalledTwice(t *testing.T) {
+	taskLog := NewProgress(DefaultOutputConfig)
+	taskLog.Start()
+	defer taskLog.Stop()
+	assert.PanicsWithValue(t, "can not start progress log more than once", taskLog.Start)
+}
+
+func TestProgress_Push_PanicsIfCalledAfterStop(t *testing.T) {
+	taskLog := NewProgress(DefaultOutputConfig)
+	taskLog.Start()
+	taskLog.Stop()
+	assert.Panics(t, func() { taskLog.Push(messages.Update{}) }) //nolint:errcheck
+}
+
+func TestProgress_Stop_PanicsIfCalledBeforeStart(t *testing.T) {
+	taskLog := NewProgress(DefaultOutputConfig)
+	assert.PanicsWithValue(t, "can not stop progress log that has not been started", taskLog.Stop)
+}
+
+func TestProgress_Stop_PanicsIfCalledTwice(t *testing.T) {
+	taskLog := NewProgress(DefaultOutputConfig)
+	taskLog.Start()
+	taskLog.Stop()
+	assert.Panics(t, taskLog.Stop)
+}
+
 func TestProgress_Output(t *testing.T) {
 	cfg := DefaultOutputConfig
 	buf := bytes.NewBuffer(nil)
