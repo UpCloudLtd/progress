@@ -26,7 +26,6 @@ func NewProgress(config OutputConfig) *Progress {
 		renderer:   messages.NewMessageRenderer(messages.OutputConfig(config)),
 		updateChan: make(chan messages.Update),
 		errorChan:  make(chan error),
-		stopChan:   make(chan bool),
 		doneChan:   make(chan bool),
 	}
 }
@@ -50,20 +49,32 @@ func (p Progress) run() {
 	}
 }
 
-// Start the progress logging in a new goroutine.
-func (p Progress) Start() {
+// Start the progress logging in a new goroutine. Panics if called more than once.
+func (p *Progress) Start() {
+	if p.stopChan != nil {
+		panic("can not start progress log more than once")
+	}
+
+	p.stopChan = make(chan bool)
 	go p.run()
 }
 
-// Push updates to the progress log.
+// Push updates to the progress log. Panics if called after Close.
 func (p Progress) Push(update messages.Update) error {
 	p.updateChan <- update
 	return <-p.errorChan
 }
 
-// Stop the goroutine handling progress logging and render the final progress state.
+// Stop the goroutine handling progress logging and render the final progress state. Panics if called before start or more than once.
 func (p Progress) Stop() {
+	if p.stopChan == nil {
+		panic("can not stop progress log that has not been started")
+	}
+
 	p.stopChan <- true
 	// Block until stop is handled
 	<-p.doneChan
+
+	close(p.stopChan)
+	close(p.updateChan)
 }
