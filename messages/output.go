@@ -249,10 +249,10 @@ func (mr *MessageRenderer) moveToInProgressStartText() string {
 	currentWidth := mr.config.GetMaxWidth()
 	currentHeight := mr.inProgressHeight
 	if currentWidth < mr.inProgressWidth {
-		contentLength := mr.inProgressWidth * mr.inProgressWidth
-		currentHeight = int(math.Ceil(float64(contentLength) / float64(currentWidth)))
+		// In-progress messages always span whole terminal width. Thus, when terminal width is decreased, every in-progress message is wrapped to the next line(s).
+		currentHeight *= int(math.Ceil(float64(mr.inProgressWidth) / float64(currentWidth)))
 	}
 
-	// Move to first column and move cursor to beginning of in-progress area
-	return "\r" + strings.Repeat(text.CursorUp.Sprint(), currentHeight)
+	// Move to first column, move cursor to beginning of in-progress area and erase all lines on the way.
+	return "\r" + strings.Repeat(text.CursorUp.Sprint()+text.EraseLine.Sprint(), currentHeight)
 }
