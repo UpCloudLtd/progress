@@ -35,14 +35,13 @@ func (p Progress) run() {
 	ticker := time.NewTicker(time.Millisecond * 95)
 	defer ticker.Stop()
 
-RunLoop:
 	for {
 		select {
 		case <-p.stopChan:
 			p.store.Close()
 			p.renderer.RenderMessageStore(p.store)
 			p.doneChan <- true
-			break RunLoop
+			return
 		case update := <-p.updateChan:
 			p.errorChan <- p.store.Push(update)
 		case <-ticker.C:
