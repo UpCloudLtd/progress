@@ -19,21 +19,23 @@ const (
 
 type OutputConfig struct {
 	DefaultTextWidth    int
+	DisableColors       bool
 	ShowStatusIndicator bool
 	StatusIndicatorMap  map[MessageStatus]string
-	StatusColorMap      map[MessageStatus]text.Color
+	StatusColorMap      map[MessageStatus]Color
 	InProgressAnimation []string
-	UnknownColor        text.Color
+	UnknownColor        Color
 	UnknownIndicator    string
-	DetailsColor        text.Color
+	DetailsColor        Color
 	ColorMessage        bool
-	StopWatchcolor      text.Color
+	StopWatchcolor      Color
 	ShowStopwatch       bool
 	Target              io.Writer
 }
 
 var DefaultOutputConfig = OutputConfig{
 	DefaultTextWidth:    100,
+	DisableColors:       false,
 	ShowStatusIndicator: true,
 	StatusIndicatorMap: map[MessageStatus]string{
 		MessageStatusSuccess: "✓",
@@ -43,7 +45,7 @@ var DefaultOutputConfig = OutputConfig{
 		MessageStatusPending: "#",
 		MessageStatusSkipped: "-",
 	},
-	StatusColorMap: map[MessageStatus]text.Color{
+	StatusColorMap: map[MessageStatus]Color{
 		MessageStatusSuccess: text.FgGreen,
 		MessageStatusWarning: text.FgYellow,
 		MessageStatusError:   text.FgRed,
@@ -61,11 +63,26 @@ var DefaultOutputConfig = OutputConfig{
 	Target:              os.Stderr,
 }
 
-func (cfg OutputConfig) getStatusColor(status MessageStatus) text.Color {
-	if color, ok := cfg.StatusColorMap[status]; ok {
-		return color
+func (cfg OutputConfig) getColor(c Color) Color {
+	if cfg.DisableColors || os.Getenv("NO_COLOR") != "" {
+		return noColor{}
 	}
-	return cfg.UnknownColor
+	return c
+}
+
+func (cfg OutputConfig) getStatusColor(status MessageStatus) Color {
+	if color, ok := cfg.StatusColorMap[status]; ok {
+		return cfg.getColor(color)
+	}
+	return cfg.getColor(cfg.UnknownColor)
+}
+
+func (cfg OutputConfig) getDetailsColor() Color {
+	return cfg.getColor(cfg.DetailsColor)
+}
+
+func (cfg OutputConfig) getStopWatchcolor() Color {
+	return cfg.getColor(cfg.StopWatchcolor)
 }
 
 func (cfg OutputConfig) getStatusIndicator(status MessageStatus) string {
@@ -122,7 +139,7 @@ func (cfg OutputConfig) GetMaxHeight() int {
 
 func (cfg OutputConfig) formatDetails(msg *Message) string {
 	wrapWidth := cfg.GetMaxWidth() - 2
-	details := text.WrapSoft(cfg.DetailsColor.Sprint(msg.Details), wrapWidth)
+	details := text.WrapSoft(cfg.getDetailsColor().Sprint(msg.Details), wrapWidth)
 
 	if cfg.ShowStatusIndicator {
 		return strings.ReplaceAll("\n"+details, "\n", "\n  ")
@@ -146,7 +163,7 @@ func (cfg OutputConfig) GetMessageText(msg *Message, renderState RenderState) st
 
 	elapsed := elapsedString(msg.ElapsedSeconds())
 	if elapsed != "" {
-		elapsed = cfg.StopWatchcolor.Sprintf(" %s", elapsed)
+		elapsed = cfg.getStopWatchcolor().Sprintf(" %s", elapsed)
 	}
 
 	lenFn := text.RuneWidthWithoutEscSequences
