@@ -82,3 +82,34 @@ func TestProgress_Output(t *testing.T) {
 	}
 	assert.Equal(t, expected, output)
 }
+
+func TestProgress_ClosesInProgressMessagesOnStop(t *testing.T) {
+	cfg := DefaultOutputConfig
+	buf := bytes.NewBuffer(nil)
+	cfg.Target = buf
+
+	taskLog := NewProgress(cfg)
+	taskLog.Start()
+
+	err := taskLog.Push(messages.Update{Message: "Test pending 1", Status: messages.MessageStatusPending})
+	assert.NoError(t, err)
+	time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
+	err = taskLog.Push(messages.Update{Message: "Test started", Status: messages.MessageStatusStarted})
+	assert.NoError(t, err)
+	time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
+	err = taskLog.Push(messages.Update{Message: "Test pending 2", Status: messages.MessageStatusPending})
+	assert.NoError(t, err)
+
+	time.Sleep(time.Millisecond * 100) // Wait for the first render
+
+	taskLog.Stop()
+
+	output := buf.String()
+
+	expected := "\x1b[34m> \x1b[0mTest started                                                                                      \n\x1b[35m- \x1b[0mTest pending 1                                                                                    \n\x1b[35m- \x1b[0mTest pending 2                                                                                    \n\x1b[37m? \x1b[0mTest started                                                                                      \n"
+	if runtime.GOOS == "windows" {
+		re := regexp.MustCompile("\x1b\\[[0-9]+m")
+		expected = re.ReplaceAllString(expected, "")
+	}
+	assert.Equal(t, expected, output)
+}

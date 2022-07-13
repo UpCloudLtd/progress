@@ -18,6 +18,7 @@ type Message struct {
 	Message  string
 	Status   MessageStatus
 	Details  string
+	Created  time.Time
 	Started  time.Time
 	Finished time.Time
 }
@@ -44,6 +45,9 @@ func validateStatus(status MessageStatus) error {
 }
 
 func (msg *Message) update(update Update) {
+	if msg.Created.IsZero() {
+		msg.Created = time.Now()
+	}
 	if update.Status != MessageStatusPending && msg.Started.IsZero() {
 		msg.Started = time.Now()
 	}
@@ -153,6 +157,18 @@ func (ms *MessageStore) ListInProgress() []*Message {
 	}
 
 	sort.Slice(messages, func(i, j int) bool {
+		// Sort zero before any value
+		if messages[i].Started.IsZero() && !messages[j].Started.IsZero() {
+			return true
+		}
+		if !messages[i].Started.IsZero() && messages[j].Started.IsZero() {
+			return false
+		}
+		// For not started, sort by created time
+		if messages[i].Started.IsZero() && messages[j].Started.IsZero() {
+			return messages[i].Created.Before(messages[j].Created)
+		}
+		// Sort by started time
 		return messages[i].Started.Before(messages[j].Started)
 	})
 
@@ -166,7 +182,7 @@ func (ms *MessageStore) ListFinished() []*Message {
 
 // Close sets status of pending messages to skipped and started message to unknown.
 func (ms *MessageStore) Close() {
-	for _, msg := range ms.inProgress {
+	for _, msg := range ms.ListInProgress() {
 		if msg.Status == MessageStatusPending {
 			ms.Push(Update{ //nolint:errcheck
 				Key:    msg.Key,
