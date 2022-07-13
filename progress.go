@@ -1,6 +1,7 @@
 package progress
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/kangasta/progress/messages"
@@ -22,11 +23,10 @@ type Progress struct {
 // NewProgress creates new Progress instance.
 func NewProgress(config OutputConfig) *Progress {
 	return &Progress{
-		store:      messages.NewMessageStore(),
-		renderer:   messages.NewMessageRenderer(messages.OutputConfig(config)),
-		updateChan: make(chan messages.Update),
-		errorChan:  make(chan error),
-		doneChan:   make(chan bool),
+		store:     messages.NewMessageStore(),
+		renderer:  messages.NewMessageRenderer(messages.OutputConfig(config)),
+		errorChan: make(chan error),
+		doneChan:  make(chan bool),
 	}
 }
 
@@ -56,11 +56,16 @@ func (p *Progress) Start() {
 	}
 
 	p.stopChan = make(chan bool)
+	p.updateChan = make(chan messages.Update)
 	go p.run()
 }
 
-// Push updates to the progress log. Panics if called after Close.
+// Push updates to the progress log. Errors if called before start or if called with an invalid update. Panics if called after Close.
 func (p Progress) Push(update messages.Update) error {
+	if p.updateChan == nil {
+		return fmt.Errorf("can not push updates into progress log that has not been started")
+	}
+
 	p.updateChan <- update
 	return <-p.errorChan
 }
