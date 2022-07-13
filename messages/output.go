@@ -20,6 +20,7 @@ const (
 type OutputConfig struct {
 	DefaultTextWidth    int
 	DisableColors       bool
+	ForceColors         bool
 	ShowStatusIndicator bool
 	StatusIndicatorMap  map[MessageStatus]string
 	StatusColorMap      map[MessageStatus]Color
@@ -64,6 +65,9 @@ var DefaultOutputConfig = OutputConfig{
 }
 
 func (cfg OutputConfig) getColor(c Color) Color {
+	if cfg.ForceColors {
+		return c
+	}
 	if cfg.DisableColors || os.Getenv("NO_COLOR") != "" {
 		return noColor{}
 	}
