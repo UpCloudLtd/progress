@@ -3,6 +3,7 @@ module github.com/kangasta/progress
 go 1.18
 
 require (
+	github.com/bradleyjkemp/cupaloy/v2 v2.7.0
 	github.com/jedib0t/go-pretty/v6 v6.3.3
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467

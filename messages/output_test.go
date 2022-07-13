@@ -1,11 +1,85 @@
 package messages
 
 import (
+	"bytes"
+	"runtime"
 	"strings"
 	"testing"
+	"time"
 
+	"github.com/bradleyjkemp/cupaloy/v2"
 	"github.com/stretchr/testify/assert"
 )
+
+const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+func TestMessageRenderer_RenderMessageStore(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		// TODO Enable for non colored output when adding NO_COLOR support
+		t.Skip("Skipping snapshot test on Windows, as output does not include ANSI codes included in the snapshot.")
+	}
+
+	cfg := DefaultOutputConfig
+	buf := bytes.NewBuffer(nil)
+	cfg.Target = buf
+
+	renderer := NewMessageRenderer(cfg)
+	store := NewMessageStore()
+
+	err := store.Push(Update{
+		Message: "Test pending (0s)",
+		Status:  MessageStatusPending,
+	})
+	assert.NoError(t, err)
+
+	time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
+	err = store.Push(Update{
+		Message: "Test started (0s)",
+		Status:  MessageStatusStarted,
+	})
+	assert.NoError(t, err)
+
+	time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
+	err = store.Push(Update{
+		Message: "Test skipped (0s, long message) - " + loremIpsum,
+		Status:  MessageStatusSkipped,
+	})
+	assert.NoError(t, err)
+
+	time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
+	err = store.Add(Message{
+		Message:  "Test success (100s)",
+		Status:   MessageStatusSuccess,
+		Started:  time.Now().Add(time.Second * -100),
+		Finished: time.Now(),
+	})
+	assert.NoError(t, err)
+
+	err = store.Add(Message{
+		Message:  "Test error (1000s)",
+		Status:   MessageStatusError,
+		Details:  "Error: Short dummy error message",
+		Started:  time.Now().Add(time.Second * -1000),
+		Finished: time.Now(),
+	})
+	assert.NoError(t, err)
+
+	err = store.Add(Message{
+		Message:  "Test warning (10s, long message) - " + loremIpsum,
+		Status:   MessageStatusWarning,
+		Details:  "Error: Long dummy error message - " + loremIpsum,
+		Started:  time.Now().Add(time.Second * -1000),
+		Finished: time.Now(),
+	})
+	assert.NoError(t, err)
+
+	renderer.RenderMessageStore(store)
+	store.Close()
+	renderer.RenderMessageStore(store)
+
+	output := buf.String()
+	cupaloy.SnapshotT(t, output)
+}
 
 func TestMessageRenderer_moveToInProgressStartText(t *testing.T) {
 	for _, test := range []struct {
