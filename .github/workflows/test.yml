@@ -33,7 +33,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Run unit tests
-      run: go test ./...
+      run: go test -v ./...
   run-example:
     runs-on: ubuntu-latest
     steps:
