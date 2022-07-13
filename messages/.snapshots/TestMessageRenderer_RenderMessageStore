@@ -1,0 +1,14 @@
+[35m- [0mTest skipped (0s, long message) - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do…
+[32m✓ [0mTest success (100s)                                                                         [90m 100 s[0m
+[31m✗ [0mTest error (1000s)                                                                        [90m > 999 s[0m
+  [90mError: Short dummy error message[0m
+[33m! [0mTest warning (10s, long message) - Lorem ipsum dolor sit amet, consectetur adipiscing eli…[90m > 999 s[0m
+  [90mError: Long dummy error message - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do [0m
+  [90meiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud [0m
+  [90mexercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in    [0m
+  [90mreprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint      [0m
+  [90moccaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.[0m
+[34m> [0mTest started (0s)                                                                                 
+[35m- [0mTest pending (0s)                                                                                 
+[37m? [0mTest started (0s)                                                                                 
+
