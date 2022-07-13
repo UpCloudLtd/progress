@@ -30,6 +30,12 @@ func TestProgress_Start_PanicsIfCalledTwice(t *testing.T) {
 	assert.PanicsWithValue(t, "can not start progress log more than once", taskLog.Start)
 }
 
+func TestProgress_Push_ErrorsIfCalledBeforeStart(t *testing.T) {
+	taskLog := NewProgress(DefaultOutputConfig)
+	err := taskLog.Push(messages.Update{})
+	assert.EqualError(t, err, "can not push updates into progress log that has not been started")
+}
+
 func TestProgress_Push_PanicsIfCalledAfterStop(t *testing.T) {
 	taskLog := NewProgress(DefaultOutputConfig)
 	taskLog.Start()
