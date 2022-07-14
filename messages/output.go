@@ -5,6 +5,7 @@ import (
 	"io"
 	"math"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/text"
@@ -18,20 +19,22 @@ const (
 )
 
 type OutputConfig struct {
-	DefaultTextWidth    int
-	DisableColors       bool
-	ForceColors         bool
-	ShowStatusIndicator bool
-	StatusIndicatorMap  map[MessageStatus]string
-	StatusColorMap      map[MessageStatus]Color
-	InProgressAnimation []string
-	UnknownColor        Color
-	UnknownIndicator    string
-	DetailsColor        Color
-	ColorMessage        bool
-	StopWatchcolor      Color
-	ShowStopwatch       bool
-	Target              io.Writer
+	DefaultTextWidth            int
+	DisableColors               bool
+	ForceColors                 bool
+	ShowStatusIndicator         bool
+	StatusIndicatorMap          map[MessageStatus]string
+	FallbackStatusIndicatorMap  map[MessageStatus]string
+	StatusColorMap              map[MessageStatus]Color
+	InProgressAnimation         []string
+	FallbackInProgressAnimation []string
+	UnknownColor                Color
+	UnknownIndicator            string
+	DetailsColor                Color
+	ColorMessage                bool
+	StopWatchcolor              Color
+	ShowStopwatch               bool
+	Target                      io.Writer
 }
 
 var DefaultOutputConfig = OutputConfig{
@@ -39,12 +42,16 @@ var DefaultOutputConfig = OutputConfig{
 	DisableColors:       false,
 	ShowStatusIndicator: true,
 	StatusIndicatorMap: map[MessageStatus]string{
-		MessageStatusSuccess: "✓",
+		MessageStatusSuccess: "✓", // Check mark: U+2713
 		MessageStatusWarning: "!",
-		MessageStatusError:   "✗",
+		MessageStatusError:   "✗", // Ballot X: U+2717
 		MessageStatusStarted: ">",
 		MessageStatusPending: "#",
 		MessageStatusSkipped: "-",
+	},
+	FallbackStatusIndicatorMap: map[MessageStatus]string{
+		MessageStatusSuccess: "√", // Square root: U+221A
+		MessageStatusError:   "X",
 	},
 	StatusColorMap: map[MessageStatus]Color{
 		MessageStatusSuccess: text.FgGreen,
@@ -54,14 +61,24 @@ var DefaultOutputConfig = OutputConfig{
 		MessageStatusPending: text.FgCyan,
 		MessageStatusSkipped: text.FgMagenta,
 	},
-	InProgressAnimation: []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"},
-	UnknownColor:        text.FgWhite,
-	UnknownIndicator:    "?",
-	DetailsColor:        text.FgHiBlack,
-	ColorMessage:        false,
-	StopWatchcolor:      text.FgHiBlack,
-	ShowStopwatch:       true,
-	Target:              os.Stderr,
+	InProgressAnimation:         []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"},
+	FallbackInProgressAnimation: []string{"/", "-", "\\", "|"},
+	UnknownColor:                text.FgWhite,
+	UnknownIndicator:            "?",
+	DetailsColor:                text.FgHiBlack,
+	ColorMessage:                false,
+	StopWatchcolor:              text.FgHiBlack,
+	ShowStopwatch:               true,
+	Target:                      os.Stderr,
+}
+
+func (cfg OutputConfig) shouldUseFallback() bool {
+	// Use max height to guess if output is terminal
+	if runtime.GOOS == "windows" && cfg.GetMaxHeight() != 0 && !isUnicodeSafeWindowsTermProgram() {
+		return true
+	}
+
+	return false
 }
 
 func (cfg OutputConfig) getColor(c Color) Color {
@@ -90,16 +107,27 @@ func (cfg OutputConfig) getStopWatchcolor() Color {
 }
 
 func (cfg OutputConfig) getStatusIndicator(status MessageStatus) string {
-	if indicator, ok := cfg.StatusIndicatorMap[status]; ok {
-		return indicator
+	indicator := cfg.UnknownIndicator
+	if preferred, ok := cfg.StatusIndicatorMap[status]; ok {
+		indicator = preferred
 	}
-	return cfg.UnknownIndicator
+
+	if cfg.shouldUseFallback() {
+		if fallback, ok := cfg.FallbackStatusIndicatorMap[status]; ok {
+			indicator = fallback
+		}
+	}
+
+	return indicator
 }
 
 func (cfg OutputConfig) getInProgressAnimationFrame(renderState RenderState) string {
 	animation := cfg.InProgressAnimation
-	i := int(renderState) % len(animation)
+	if cfg.shouldUseFallback() {
+		animation = cfg.FallbackInProgressAnimation
+	}
 
+	i := int(renderState) % len(animation)
 	return animation[i]
 
 }
