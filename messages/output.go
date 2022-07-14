@@ -5,10 +5,10 @@ import (
 	"io"
 	"math"
 	"os"
-	"runtime"
 	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/text"
+	"github.com/kangasta/progress/terminal"
 	"golang.org/x/term"
 )
 
@@ -73,8 +73,7 @@ var DefaultOutputConfig = OutputConfig{
 }
 
 func (cfg OutputConfig) shouldUseFallback() bool {
-	// Use max height to guess if output is terminal
-	if runtime.GOOS == "windows" && cfg.GetMaxHeight() != 0 && !isUnicodeSafeWindowsTermProgram() {
+	if terminal.IsWindowsTerminal(cfg.Target) && !terminal.IsSafeWindowsTermProgram() {
 		return true
 	}
 
