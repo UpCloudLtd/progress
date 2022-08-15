@@ -18,7 +18,7 @@ func main() {
 
 	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "first-example",
-		Message: "Example message",
+		Message: "Progress is a library for communicating CLI app progress to the user",
 		Status:  messages.MessageStatusStarted,
 	})
 
@@ -26,7 +26,7 @@ func main() {
 
 	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "parallel-example",
-		Message: "Example message running in parallel",
+		Message: "There can be multiple active progress messages at once",
 		Status:  messages.MessageStatusStarted,
 	})
 
@@ -34,7 +34,7 @@ func main() {
 
 	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "first-example",
-		Message: "Updated example message",
+		Message: "Progress messages can be updated while they are in pending or started state",
 		Status:  messages.MessageStatusStarted,
 	})
 
@@ -54,11 +54,17 @@ func main() {
 		Message: "If message has started status when log is closed, its status is set to unknown",
 	})
 
+	taskLog.Push(messages.Update{ //nolint:errcheck
+		Key:     "pending-example",
+		Status:  messages.MessageStatusPending,
+		Message: "Pending tasks are not written to output. If message has pending status when log is closed, its status is set to skipped",
+	})
+
 	time.Sleep(time.Millisecond * 1500)
 
 	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "first-example",
-		Message: "Finished example message",
+		Message: "Progress messages are, by default, written to stderr",
 		Status:  messages.MessageStatusSuccess,
 	})
 
