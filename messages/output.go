@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/UpCloudLtd/progress/terminal"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/kangasta/progress/terminal"
 	"golang.org/x/term"
 )
 

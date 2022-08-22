@@ -1,4 +1,4 @@
-module github.com/kangasta/progress
+module github.com/UpCloudLtd/progress
 
 go 1.18
 
