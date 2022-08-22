@@ -9,6 +9,8 @@
 [90mreprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint      [0m
 [90moccaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.[0m
 [34mTest started (0s)                                                                                   [0m
+[34mTest ProgressMessage is not visible in non-TTY output                                               [0m
+[32mTest ProgressMessage is not visible in non-TTY output                                               [0m
 [35mTest pending (0s)                                                                                   [0m
 [37mTest started (0s)                                                                                   [0m
 

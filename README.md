@@ -83,6 +83,12 @@ To test the code, run `go test ./...`.
 go test ./...
 ```
 
+To update snapshots, run tests with `UPDATE_SNAPSHOTS` environment variable set to `true`.
+
+```sh
+UPDATE_SNAPSHOTS=true go test ./...
+```
+
 To build and run the example application, run:
 
 ```sh
