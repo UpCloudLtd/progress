@@ -1,12 +1,12 @@
-package messages
+package messages_test
 
 import (
 	"bytes"
 	"runtime"
-	"strings"
 	"testing"
 	"time"
 
+	"github.com/UpCloudLtd/progress/messages"
 	"github.com/bradleyjkemp/cupaloy/v2"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,18 +14,18 @@ import (
 const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
 func TestMessageRenderer_RenderMessageStore(t *testing.T) {
-	defaultConfig := GetDefaultOutputConfig()
+	defaultConfig := messages.GetDefaultOutputConfig()
 
-	disableColors := GetDefaultOutputConfig()
+	disableColors := messages.GetDefaultOutputConfig()
 	disableColors.DisableColors = true
 
-	noIndicatorColorMessage := GetDefaultOutputConfig()
+	noIndicatorColorMessage := messages.GetDefaultOutputConfig()
 	noIndicatorColorMessage.ColorMessage = true
 	noIndicatorColorMessage.ShowStatusIndicator = false
 
 	for _, test := range []struct {
 		name          string
-		config        OutputConfig
+		config        messages.OutputConfig
 		skipOnWindows bool
 	}{
 		{
@@ -53,50 +53,50 @@ func TestMessageRenderer_RenderMessageStore(t *testing.T) {
 			buf := bytes.NewBuffer(nil)
 			cfg.Target = buf
 
-			renderer := NewMessageRenderer(cfg)
-			store := NewMessageStore()
+			renderer := messages.NewMessageRenderer(cfg)
+			store := messages.NewMessageStore()
 
-			err := store.Push(Update{
+			err := store.Push(messages.Update{
 				Message: "Test pending (0s)",
-				Status:  MessageStatusPending,
+				Status:  messages.MessageStatusPending,
 			})
 			assert.NoError(t, err)
 
 			time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
-			err = store.Push(Update{
+			err = store.Push(messages.Update{
 				Message: "Test started (0s)",
-				Status:  MessageStatusStarted,
+				Status:  messages.MessageStatusStarted,
 			})
 			assert.NoError(t, err)
 
 			time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
-			err = store.Push(Update{
+			err = store.Push(messages.Update{
 				Message: "Test skipped (0s, long message) - " + loremIpsum,
-				Status:  MessageStatusSkipped,
+				Status:  messages.MessageStatusSkipped,
 			})
 			assert.NoError(t, err)
 
 			time.Sleep(time.Microsecond * 25) // Ensure time difference on Windows
-			err = store.Add(Message{
+			err = store.Add(messages.Message{
 				Message:  "Test success (100s)",
-				Status:   MessageStatusSuccess,
+				Status:   messages.MessageStatusSuccess,
 				Started:  time.Now().Add(time.Second * -100),
 				Finished: time.Now(),
 			})
 			assert.NoError(t, err)
 
-			err = store.Add(Message{
+			err = store.Add(messages.Message{
 				Message:  "Test error (1000s)",
-				Status:   MessageStatusError,
+				Status:   messages.MessageStatusError,
 				Details:  "Error: Short dummy error message",
 				Started:  time.Now().Add(time.Second * -1000),
 				Finished: time.Now(),
 			})
 			assert.NoError(t, err)
 
-			err = store.Add(Message{
+			err = store.Add(messages.Message{
 				Message:  "Test warning (10s, long message) - " + loremIpsum,
-				Status:   MessageStatusWarning,
+				Status:   messages.MessageStatusWarning,
 				Details:  "Error: Long dummy error message - " + loremIpsum,
 				Started:  time.Now().Add(time.Second * -1000),
 				Finished: time.Now(),
@@ -105,24 +105,24 @@ func TestMessageRenderer_RenderMessageStore(t *testing.T) {
 
 			renderer.RenderMessageStore(store)
 
-			err = store.Push(Update{
+			err = store.Push(messages.Update{
 				Key:     "progress-example",
 				Message: "Test ProgressMessage is not visible in non-TTY output",
-				Status:  MessageStatusStarted,
+				Status:  messages.MessageStatusStarted,
 			})
 			assert.NoError(t, err)
 			renderer.RenderMessageStore(store)
 
-			err = store.Push(Update{
+			err = store.Push(messages.Update{
 				Key:             "progress-example",
 				ProgressMessage: "(50%)",
 			})
 			assert.NoError(t, err)
 			renderer.RenderMessageStore(store)
 
-			err = store.Push(Update{
+			err = store.Push(messages.Update{
 				Key:    "progress-example",
-				Status: MessageStatusSuccess,
+				Status: messages.MessageStatusSuccess,
 			})
 			assert.NoError(t, err)
 			store.Close()
@@ -130,59 +130,6 @@ func TestMessageRenderer_RenderMessageStore(t *testing.T) {
 
 			output := buf.String()
 			cupaloy.SnapshotT(t, output)
-		})
-	}
-}
-
-func TestMessageRenderer_moveToInProgressStartText(t *testing.T) {
-	for _, test := range []struct {
-		name             string
-		inProgressWidth  int
-		inProgressHeight int
-		terminalWidth    int
-		moveUp           int
-	}{
-		{
-			name:             "Terminal width increases",
-			inProgressWidth:  30,
-			inProgressHeight: 3,
-			terminalWidth:    31,
-			moveUp:           3,
-		},
-		{
-			name:             "Terminal width stays the same",
-			inProgressWidth:  30,
-			inProgressHeight: 3,
-			terminalWidth:    30,
-			moveUp:           3,
-		},
-		{
-			name:             "Terminal width decreases from 30 to 29",
-			inProgressWidth:  30,
-			inProgressHeight: 3,
-			terminalWidth:    29,
-			moveUp:           6,
-		},
-		{
-			name:             "Terminal width decreases from 30 to 10",
-			inProgressWidth:  30,
-			inProgressHeight: 3,
-			terminalWidth:    10,
-			moveUp:           9,
-		},
-	} {
-		t.Run(test.name, func(t *testing.T) {
-			cfg := GetDefaultOutputConfig()
-			cfg.DefaultTextWidth = test.terminalWidth
-
-			r := NewMessageRenderer(cfg)
-			r.inProgressHeight = test.inProgressHeight
-			r.inProgressWidth = test.inProgressWidth
-
-			// Cursor up = \x1b[A
-			// Erase from cursor to EOL = \x1b[K
-			moveUpCount := strings.Count(r.moveToInProgressStartText(), "\x1b[A\x1b[K")
-			assert.Equal(t, test.moveUp, moveUpCount)
 		})
 	}
 }
