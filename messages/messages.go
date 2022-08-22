@@ -180,7 +180,7 @@ func (ms *MessageStore) ListInProgress() []*Message {
 	return messages
 }
 
-// ListFinished lists finished messages in MessageStore in order they were marked finished
+// ListFinished lists finished messages in MessageStore in order they were marked finished.
 func (ms *MessageStore) ListFinished() []*Message {
 	return ms.finished
 }
@@ -189,13 +189,13 @@ func (ms *MessageStore) ListFinished() []*Message {
 func (ms *MessageStore) Close() {
 	for _, msg := range ms.ListInProgress() {
 		if msg.Status == MessageStatusPending {
-			ms.Push(Update{ //nolint:errcheck
+			_ = ms.Push(Update{
 				Key:    msg.Key,
 				Status: MessageStatusSkipped,
 			})
 		}
 		if msg.Status == MessageStatusStarted {
-			ms.Push(Update{ //nolint:errcheck
+			_ = ms.Push(Update{
 				Key:    msg.Key,
 				Status: MessageStatusUnknown,
 			})

@@ -40,7 +40,7 @@ func TestProgress_Push_PanicsIfCalledAfterStop(t *testing.T) {
 	taskLog := NewProgress(DefaultOutputConfig)
 	taskLog.Start()
 	taskLog.Stop()
-	assert.Panics(t, func() { taskLog.Push(messages.Update{}) }) //nolint:errcheck
+	assert.Panics(t, func() { _ = taskLog.Push(messages.Update{}) })
 }
 
 func TestProgress_Stop_PanicsIfCalledBeforeStart(t *testing.T) {
