@@ -12,7 +12,7 @@ import (
 )
 
 func TestProgress_Push_ErrorChannel(t *testing.T) {
-	taskLog := NewProgress(DefaultOutputConfig)
+	taskLog := NewProgress(GetDefaultOutputConfig())
 	taskLog.Start()
 	defer taskLog.Stop()
 
@@ -24,39 +24,39 @@ func TestProgress_Push_ErrorChannel(t *testing.T) {
 }
 
 func TestProgress_Start_PanicsIfCalledTwice(t *testing.T) {
-	taskLog := NewProgress(DefaultOutputConfig)
+	taskLog := NewProgress(GetDefaultOutputConfig())
 	taskLog.Start()
 	defer taskLog.Stop()
 	assert.PanicsWithValue(t, "can not start progress log more than once", taskLog.Start)
 }
 
 func TestProgress_Push_ErrorsIfCalledBeforeStart(t *testing.T) {
-	taskLog := NewProgress(DefaultOutputConfig)
+	taskLog := NewProgress(GetDefaultOutputConfig())
 	err := taskLog.Push(messages.Update{})
 	assert.EqualError(t, err, "can not push updates into progress log that has not been started")
 }
 
 func TestProgress_Push_PanicsIfCalledAfterStop(t *testing.T) {
-	taskLog := NewProgress(DefaultOutputConfig)
+	taskLog := NewProgress(GetDefaultOutputConfig())
 	taskLog.Start()
 	taskLog.Stop()
 	assert.Panics(t, func() { _ = taskLog.Push(messages.Update{}) })
 }
 
 func TestProgress_Stop_PanicsIfCalledBeforeStart(t *testing.T) {
-	taskLog := NewProgress(DefaultOutputConfig)
+	taskLog := NewProgress(GetDefaultOutputConfig())
 	assert.PanicsWithValue(t, "can not stop progress log that has not been started", taskLog.Stop)
 }
 
 func TestProgress_Stop_PanicsIfCalledTwice(t *testing.T) {
-	taskLog := NewProgress(DefaultOutputConfig)
+	taskLog := NewProgress(GetDefaultOutputConfig())
 	taskLog.Start()
 	taskLog.Stop()
 	assert.Panics(t, taskLog.Stop)
 }
 
 func TestProgress_Output(t *testing.T) {
-	cfg := DefaultOutputConfig
+	cfg := GetDefaultOutputConfig()
 	buf := bytes.NewBuffer(nil)
 	cfg.Target = buf
 
@@ -84,7 +84,7 @@ func TestProgress_Output(t *testing.T) {
 }
 
 func TestProgress_ClosesInProgressMessagesOnStop(t *testing.T) {
-	cfg := DefaultOutputConfig
+	cfg := GetDefaultOutputConfig()
 	buf := bytes.NewBuffer(nil)
 	cfg.Target = buf
 
