@@ -1,10 +1,16 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-See updating [Changelog example here](https://keepachangelog.com/en/1.0.0/)
 
-<!-- TODO: Add links to releases -->
-## Unreleased
+The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [v1.0.0] - 2022-08-26
 
 ### Added
-- Extract and refactor livelog functionality from [UpCloud CLI (`upctl`)](https://github.com/UpCloudLtd/upcloud-cli.git)
+- Extract and refactor livelog functionality from [UpCloud CLI (`upctl`)](https://github.com/UpCloudLtd/upcloud-cli.git).
+
+
+[Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.0.0...HEAD
+[v1.0.0]: https://github.com/UpCloudLtd/progress/releases/tag/v1.0.0
