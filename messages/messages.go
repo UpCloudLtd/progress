@@ -7,20 +7,22 @@ import (
 )
 
 type Update struct {
-	Key     string
-	Message string
-	Status  MessageStatus
-	Details string
+	Key             string
+	Message         string
+	Status          MessageStatus
+	ProgressMessage string
+	Details         string
 }
 
 type Message struct {
-	Key      string
-	Message  string
-	Status   MessageStatus
-	Details  string
-	Created  time.Time
-	Started  time.Time
-	Finished time.Time
+	Key             string
+	Message         string
+	Status          MessageStatus
+	ProgressMessage string
+	Details         string
+	Created         time.Time
+	Started         time.Time
+	Finished        time.Time
 }
 
 func getMessageKey(key, message string) string {
@@ -73,6 +75,9 @@ func (msg *Message) update(update Update) {
 	if update.Details != "" {
 		msg.Details = update.Details
 	}
+
+	// Clear progress message if it is not set in the update
+	msg.ProgressMessage = update.ProgressMessage
 }
 
 func (msg Message) ElapsedSeconds() float64 {
