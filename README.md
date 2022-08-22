@@ -1,6 +1,6 @@
 # Progress
 
-[![Test](https://github.com/kangasta/progress/actions/workflows/test.yml/badge.svg)](https://github.com/kangasta/progress/actions/workflows/test.yml)
+[![Test](https://github.com/UpCloudLtd/progress/actions/workflows/test.yml/badge.svg)](https://github.com/UpCloudLtd/progress/actions/workflows/test.yml)
 
 Go module for printing progress/task status of command line applications.
 
@@ -9,7 +9,7 @@ Go module for printing progress/task status of command line applications.
 To install this library, use `go get`:
 
 ```sh
-go get github.com/kangasta/progress
+go get github.com/UpCloudLtd/progress
 ```
 
 ## Usage
@@ -70,6 +70,8 @@ taskLog.Push(messages.Update{
 ```
 
 ## Development
+
+Use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) when committing your changes.
 
 To lint the code, run `golangci-lint run`. See its documentation for  [local installation instructions](https://golangci-lint.run/usage/install/#local-installation).
 

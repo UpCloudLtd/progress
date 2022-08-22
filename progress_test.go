@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kangasta/progress/messages"
+	"github.com/UpCloudLtd/progress/messages"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/kangasta/progress/messages"
+	"github.com/UpCloudLtd/progress/messages"
 )
 
 type OutputConfig messages.OutputConfig
