@@ -128,7 +128,6 @@ func (cfg OutputConfig) getInProgressAnimationFrame(renderState RenderState) str
 
 	i := int(renderState) % len(animation)
 	return animation[i]
-
 }
 
 func elapsedString(elapsedSeconds float64) string {
@@ -156,13 +155,13 @@ func (cfg OutputConfig) getDimensions() (int, int) {
 	return width, height
 }
 
-// GetMaxWidth returns target terminals width or, if determining terminal dimensions failed, default value from OutputConfig
+// GetMaxWidth returns target terminals width or, if determining terminal dimensions failed, default value from OutputConfig.
 func (cfg OutputConfig) GetMaxWidth() int {
 	width, _ := cfg.getDimensions()
 	return width
 }
 
-// GetMaxHeight returns target terminals height or, if determining terminal dimensions failed, zero
+// GetMaxHeight returns target terminals height or, if determining terminal dimensions failed, zero.
 func (cfg OutputConfig) GetMaxHeight() int {
 	_, height := cfg.getDimensions()
 	return height

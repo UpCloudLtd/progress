@@ -1,3 +1,4 @@
+//nolint:funlen // Does not make sense to split example usage into multiple functions
 package main
 
 import (
@@ -17,7 +18,7 @@ func main() {
 	taskLog.Start()
 	defer taskLog.Stop()
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:     "first-example",
 		Message: "Progress is a library for communicating CLI app progress to the user",
 		Status:  messages.MessageStatusStarted,
@@ -25,13 +26,13 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:     "parallel-example",
 		Message: "There can be multiple active progress messages at once",
 		Status:  messages.MessageStatusStarted,
 	})
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:     "progress-example",
 		Message: "Progress message can include part that is only outputted to TTY terminals",
 		Status:  messages.MessageStatusStarted,
@@ -39,19 +40,19 @@ func main() {
 
 	time.Sleep(time.Millisecond * 300)
 	for i := 1; i < 10; i++ {
-		taskLog.Push(messages.Update{ //nolint:errcheck
+		_ = taskLog.Push(messages.Update{
 			Key:             "progress-example",
 			ProgressMessage: fmt.Sprintf("(%d%%)", i*10),
 		})
 		time.Sleep(time.Millisecond * 300)
 	}
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:    "progress-example",
 		Status: messages.MessageStatusSuccess,
 	})
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:     "first-example",
 		Message: "Progress messages can be updated while they are in pending or started state",
 		Status:  messages.MessageStatusStarted,
@@ -59,7 +60,7 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:     "parallel-example",
 		Status:  messages.MessageStatusError,
 		Details: "Error: Message details can be used, for example, to communicate error messages to the user.",
@@ -67,13 +68,13 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:     "unknown-example",
 		Status:  messages.MessageStatusStarted,
 		Message: "If message has started status when log is closed, its status is set to unknown",
 	})
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:     "pending-example",
 		Status:  messages.MessageStatusPending,
 		Message: "Pending tasks are not written to output. If message has pending status when log is closed, its status is set to skipped",
@@ -81,7 +82,7 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:     "first-example",
 		Message: "Progress messages are, by default, written to stderr",
 		Status:  messages.MessageStatusSuccess,
@@ -89,7 +90,7 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:     "long",
 		Message: "Long messages are truncated - " + loremIpsum,
 		Details: loremIpsum,
@@ -98,7 +99,7 @@ func main() {
 
 	time.Sleep(time.Second * 3)
 
-	taskLog.Push(messages.Update{ //nolint:errcheck
+	_ = taskLog.Push(messages.Update{
 		Key:    "long",
 		Status: messages.MessageStatusWarning,
 	})
