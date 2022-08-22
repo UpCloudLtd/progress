@@ -1,4 +1,4 @@
-package progress
+package progress_test
 
 import (
 	"bytes"
@@ -7,12 +7,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/UpCloudLtd/progress"
 	"github.com/UpCloudLtd/progress/messages"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestProgress_Push_ErrorChannel(t *testing.T) {
-	taskLog := NewProgress(GetDefaultOutputConfig())
+	taskLog := progress.NewProgress(progress.GetDefaultOutputConfig())
 	taskLog.Start()
 	defer taskLog.Stop()
 
@@ -24,43 +25,43 @@ func TestProgress_Push_ErrorChannel(t *testing.T) {
 }
 
 func TestProgress_Start_PanicsIfCalledTwice(t *testing.T) {
-	taskLog := NewProgress(GetDefaultOutputConfig())
+	taskLog := progress.NewProgress(progress.GetDefaultOutputConfig())
 	taskLog.Start()
 	defer taskLog.Stop()
 	assert.PanicsWithValue(t, "can not start progress log more than once", taskLog.Start)
 }
 
 func TestProgress_Push_ErrorsIfCalledBeforeStart(t *testing.T) {
-	taskLog := NewProgress(GetDefaultOutputConfig())
+	taskLog := progress.NewProgress(progress.GetDefaultOutputConfig())
 	err := taskLog.Push(messages.Update{})
 	assert.EqualError(t, err, "can not push updates into progress log that has not been started")
 }
 
 func TestProgress_Push_PanicsIfCalledAfterStop(t *testing.T) {
-	taskLog := NewProgress(GetDefaultOutputConfig())
+	taskLog := progress.NewProgress(progress.GetDefaultOutputConfig())
 	taskLog.Start()
 	taskLog.Stop()
 	assert.Panics(t, func() { _ = taskLog.Push(messages.Update{}) })
 }
 
 func TestProgress_Stop_PanicsIfCalledBeforeStart(t *testing.T) {
-	taskLog := NewProgress(GetDefaultOutputConfig())
+	taskLog := progress.NewProgress(progress.GetDefaultOutputConfig())
 	assert.PanicsWithValue(t, "can not stop progress log that has not been started", taskLog.Stop)
 }
 
 func TestProgress_Stop_PanicsIfCalledTwice(t *testing.T) {
-	taskLog := NewProgress(GetDefaultOutputConfig())
+	taskLog := progress.NewProgress(progress.GetDefaultOutputConfig())
 	taskLog.Start()
 	taskLog.Stop()
 	assert.Panics(t, taskLog.Stop)
 }
 
 func TestProgress_Output(t *testing.T) {
-	cfg := GetDefaultOutputConfig()
+	cfg := progress.GetDefaultOutputConfig()
 	buf := bytes.NewBuffer(nil)
 	cfg.Target = buf
 
-	taskLog := NewProgress(cfg)
+	taskLog := progress.NewProgress(cfg)
 	taskLog.Start()
 
 	err := taskLog.Push(messages.Update{Message: "Test update", Status: messages.MessageStatusStarted})
@@ -84,11 +85,11 @@ func TestProgress_Output(t *testing.T) {
 }
 
 func TestProgress_ClosesInProgressMessagesOnStop(t *testing.T) {
-	cfg := GetDefaultOutputConfig()
+	cfg := progress.GetDefaultOutputConfig()
 	buf := bytes.NewBuffer(nil)
 	cfg.Target = buf
 
-	taskLog := NewProgress(cfg)
+	taskLog := progress.NewProgress(cfg)
 	taskLog.Start()
 
 	err := taskLog.Push(messages.Update{Message: "Test pending 1", Status: messages.MessageStatusPending})
