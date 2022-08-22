@@ -8,6 +8,7 @@ import (
 )
 
 func TestMessageRenderer_moveToInProgressStartText(t *testing.T) {
+	t.Parallel()
 	for _, test := range []struct {
 		name             string
 		inProgressWidth  int
@@ -44,7 +45,9 @@ func TestMessageRenderer_moveToInProgressStartText(t *testing.T) {
 			moveUp:           9,
 		},
 	} {
+		test := test
 		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
 			cfg := GetDefaultOutputConfig()
 			cfg.DefaultTextWidth = test.terminalWidth
 

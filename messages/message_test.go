@@ -9,6 +9,7 @@ import (
 )
 
 func TestMessageStore_Push_Errors(t *testing.T) {
+	t.Parallel()
 	for _, test := range []struct {
 		name          string
 		update        messages.Update
@@ -35,7 +36,9 @@ func TestMessageStore_Push_Errors(t *testing.T) {
 			expectedError: `can not push message with invalid status "invalid"`,
 		},
 	} {
+		test := test
 		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
 			ms := messages.NewMessageStore()
 			err := ms.Push(test.update)
 			assert.EqualError(t, err, test.expectedError)
@@ -44,6 +47,7 @@ func TestMessageStore_Push_Errors(t *testing.T) {
 }
 
 func TestMessageGroup_ListInProgress_ListFinished(t *testing.T) {
+	t.Parallel()
 	ms := messages.NewMessageStore()
 
 	assert.NoError(t, ms.Push(messages.Update{Message: "2nd", Status: messages.MessageStatusPending}))
@@ -63,6 +67,7 @@ func TestMessageGroup_ListInProgress_ListFinished(t *testing.T) {
 }
 
 func TestMessageStore_Push_UpdatesMessage(t *testing.T) {
+	t.Parallel()
 	ms := messages.NewMessageStore()
 
 	assert.NoError(t, ms.Push(messages.Update{Key: "test", Message: "Testing", Status: messages.MessageStatusPending}))
