@@ -73,7 +73,7 @@ var DefaultOutputConfig = OutputConfig{
 }
 
 func (cfg OutputConfig) shouldUseFallback() bool {
-	if terminal.IsWindowsTerminal(cfg.Target) && !terminal.IsSafeWindowsTermProgram() {
+	if terminal.IsWindowsTerminal(cfg.Target) && !terminal.IsUnicodeSafeWindowsTermProgram() {
 		return true
 	}
 

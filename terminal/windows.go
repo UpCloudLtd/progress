@@ -8,8 +8,10 @@ import (
 	"golang.org/x/term"
 )
 
-var unicodeSafeWindowsTermPrograms = map[string]bool{
-	"vscode": true,
+func getUnicodeSafeWindowsTermPrograms() map[string]bool {
+	return map[string]bool{
+		"vscode": true,
+	}
 }
 
 func IsWindowsTerminal(target io.Writer) bool {
@@ -25,7 +27,8 @@ func IsWindowsTerminal(target io.Writer) bool {
 	return term.IsTerminal(int(file.Fd()))
 }
 
-func IsSafeWindowsTermProgram() bool {
+// IsUnicodeSafeWindowsTermProgram determines if current terminal program is likely able to output unicode characteres. Terminal program is determined from TERM_PROGRAM environment variable.
+func IsUnicodeSafeWindowsTermProgram() bool {
 	termProg := os.Getenv("TERM_PROGRAM")
-	return unicodeSafeWindowsTermPrograms[termProg]
+	return getUnicodeSafeWindowsTermPrograms()[termProg]
 }
