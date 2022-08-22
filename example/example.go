@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/kangasta/progress"
@@ -30,7 +31,25 @@ func main() {
 		Status:  messages.MessageStatusStarted,
 	})
 
-	time.Sleep(time.Second * 3)
+	taskLog.Push(messages.Update{ //nolint:errcheck
+		Key:     "progress-example",
+		Message: "Progress message can include part that is only outputted to TTY terminals",
+		Status:  messages.MessageStatusStarted,
+	})
+
+	time.Sleep(time.Millisecond * 300)
+	for i := 1; i < 10; i++ {
+		taskLog.Push(messages.Update{ //nolint:errcheck
+			Key:             "progress-example",
+			ProgressMessage: fmt.Sprintf("(%d%%)", i*10),
+		})
+		time.Sleep(time.Millisecond * 300)
+	}
+
+	taskLog.Push(messages.Update{ //nolint:errcheck
+		Key:    "progress-example",
+		Status: messages.MessageStatusSuccess,
+	})
 
 	taskLog.Push(messages.Update{ //nolint:errcheck
 		Key:     "first-example",

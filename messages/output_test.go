@@ -104,6 +104,27 @@ func TestMessageRenderer_RenderMessageStore(t *testing.T) {
 			assert.NoError(t, err)
 
 			renderer.RenderMessageStore(store)
+
+			err = store.Push(Update{
+				Key:     "progress-example",
+				Message: "Test ProgressMessage is not visible in non-TTY output",
+				Status:  MessageStatusStarted,
+			})
+			assert.NoError(t, err)
+			renderer.RenderMessageStore(store)
+
+			err = store.Push(Update{
+				Key:             "progress-example",
+				ProgressMessage: "(50%)",
+			})
+			assert.NoError(t, err)
+			renderer.RenderMessageStore(store)
+
+			err = store.Push(Update{
+				Key:    "progress-example",
+				Status: MessageStatusSuccess,
+			})
+			assert.NoError(t, err)
 			store.Close()
 			renderer.RenderMessageStore(store)
 

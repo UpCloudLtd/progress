@@ -54,6 +54,7 @@ Field   | Description
 `Key`     | Used to identify the message when pushing further updates. If not given when pushing first update to the message, value from `Message` field is used as `Key`.
 `Message` | Text to be outputted in the progress log for the related message.
 `Status`  | Status of the message, e.g. `success`, `error`, `warning`. Used to determine status indicator and color. Finished statuses (`success`, `error`, `warning`, `skipped`, `unknown`) are outputted to persistent log and can not be edited anymore.
+`ProgressMessage` | Progress indicator text to be appended into `Message` in TTY terminals, e.g. `128 / 384 kB` or `24 %`. Updating this field will not trigger message write in non-TTY terminals.
 `Details` | Details to be outputted under finished progress log row, e.g. error message.
 
 Progress messages can be updated while they are in `pending` or `started` states. Note that `pending` messages are not outputted at the moment.

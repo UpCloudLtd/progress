@@ -199,6 +199,9 @@ func (cfg OutputConfig) GetMessageText(msg *Message, renderState RenderState) st
 
 	lenFn := text.RuneWidthWithoutEscSequences
 	message := msg.Message
+	if msg.ProgressMessage != "" {
+		message += " " + msg.ProgressMessage
+	}
 	maxMessageWidth := termWidth - lenFn(status) - lenFn(elapsed)
 	if len(message) > maxMessageWidth {
 		message = fmt.Sprintf("%s…", message[:maxMessageWidth-1])
