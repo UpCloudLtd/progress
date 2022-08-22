@@ -14,6 +14,7 @@ import (
 const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
 func TestMessageRenderer_RenderMessageStore(t *testing.T) {
+	t.Parallel()
 	defaultConfig := messages.GetDefaultOutputConfig()
 
 	disableColors := messages.GetDefaultOutputConfig()
@@ -44,7 +45,9 @@ func TestMessageRenderer_RenderMessageStore(t *testing.T) {
 			skipOnWindows: true,
 		},
 	} {
+		test := test
 		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
 			if test.skipOnWindows && runtime.GOOS == "windows" {
 				t.Skip("Skipping snapshot test on Windows, as output will not include ANSI codes included in the snapshot.")
 			}
