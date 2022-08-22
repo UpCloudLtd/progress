@@ -97,3 +97,19 @@ To build and run the example application, run:
 go build -o example.bin ./example/example.go
 ./example.bin
 ```
+
+## Releasing
+
+When releasing a new version:
+
+1. Merge all changes to be included to the `main` branch.
+1. Prepare [CHANGELOG.md](./CHANGELOG.md) for the new release:
+    1. Add new heading with the correct version (e.g., `## [v2.3.5]`).
+    1. Update links at the bottom of the page.
+    1. Leave `Unreleased` section at the top empty.
+1. Draft a new release in [GitHub releases](https://github.com/UpCloudLtd/progress/releases):
+    1. Set the release to create new tag (e.g., `v2.3.5`).
+    1. Select the stable branch.
+    1. Title the release with the version number (e.g., `v2.3.5`).
+    1. In the description of the release, paste the changes from [CHANGELOG.md](./CHANGELOG.md) for this version release.
+1. Publish the release when ready.
