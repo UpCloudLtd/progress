@@ -28,7 +28,7 @@ To start logging the progress messages, call `Start()` to launch goroutine respo
 When done with logging progress updates, call `Stop()` to render the final progress log state and to terminate the goroutine started by `Start()`.
 
 ```go
-cfg := progress.DefaultOutputConfig
+cfg := progress.GetDefaultOutputConfig()
 taskLog := progress.NewProgress(cfg)
 
 taskLog.Start()

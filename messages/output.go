@@ -37,39 +37,41 @@ type OutputConfig struct {
 	Target                      io.Writer
 }
 
-var DefaultOutputConfig = OutputConfig{
-	DefaultTextWidth:    100,
-	DisableColors:       false,
-	ShowStatusIndicator: true,
-	StatusIndicatorMap: map[MessageStatus]string{
-		MessageStatusSuccess: "✓", // Check mark: U+2713
-		MessageStatusWarning: "!",
-		MessageStatusError:   "✗", // Ballot X: U+2717
-		MessageStatusStarted: ">",
-		MessageStatusPending: "#",
-		MessageStatusSkipped: "-",
-	},
-	FallbackStatusIndicatorMap: map[MessageStatus]string{
-		MessageStatusSuccess: "√", // Square root: U+221A
-		MessageStatusError:   "X",
-	},
-	StatusColorMap: map[MessageStatus]Color{
-		MessageStatusSuccess: text.FgGreen,
-		MessageStatusWarning: text.FgYellow,
-		MessageStatusError:   text.FgRed,
-		MessageStatusStarted: text.FgBlue,
-		MessageStatusPending: text.FgCyan,
-		MessageStatusSkipped: text.FgMagenta,
-	},
-	InProgressAnimation:         []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"},
-	FallbackInProgressAnimation: []string{"/", "-", "\\", "|"},
-	UnknownColor:                text.FgWhite,
-	UnknownIndicator:            "?",
-	DetailsColor:                text.FgHiBlack,
-	ColorMessage:                false,
-	StopWatchcolor:              text.FgHiBlack,
-	ShowStopwatch:               true,
-	Target:                      os.Stderr,
+func GetDefaultOutputConfig() OutputConfig {
+	return OutputConfig{
+		DefaultTextWidth:    100,
+		DisableColors:       false,
+		ShowStatusIndicator: true,
+		StatusIndicatorMap: map[MessageStatus]string{
+			MessageStatusSuccess: "✓", // Check mark: U+2713
+			MessageStatusWarning: "!",
+			MessageStatusError:   "✗", // Ballot X: U+2717
+			MessageStatusStarted: ">",
+			MessageStatusPending: "#",
+			MessageStatusSkipped: "-",
+		},
+		FallbackStatusIndicatorMap: map[MessageStatus]string{
+			MessageStatusSuccess: "√", // Square root: U+221A
+			MessageStatusError:   "X",
+		},
+		StatusColorMap: map[MessageStatus]Color{
+			MessageStatusSuccess: text.FgGreen,
+			MessageStatusWarning: text.FgYellow,
+			MessageStatusError:   text.FgRed,
+			MessageStatusStarted: text.FgBlue,
+			MessageStatusPending: text.FgCyan,
+			MessageStatusSkipped: text.FgMagenta,
+		},
+		InProgressAnimation:         []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"},
+		FallbackInProgressAnimation: []string{"/", "-", "\\", "|"},
+		UnknownColor:                text.FgWhite,
+		UnknownIndicator:            "?",
+		DetailsColor:                text.FgHiBlack,
+		ColorMessage:                false,
+		StopWatchcolor:              text.FgHiBlack,
+		ShowStopwatch:               true,
+		Target:                      os.Stderr,
+	}
 }
 
 func (cfg OutputConfig) shouldUseFallback() bool {

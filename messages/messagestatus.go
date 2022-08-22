@@ -12,26 +12,30 @@ const (
 	MessageStatusUnknown MessageStatus = "unknown"
 )
 
-var validUpdateStatuses = map[MessageStatus]bool{
-	MessageStatusPending: true,
-	MessageStatusStarted: true,
-	MessageStatusSuccess: true,
-	MessageStatusWarning: true,
-	MessageStatusError:   true,
-	MessageStatusSkipped: true,
-	MessageStatusUnknown: true,
+func getValidUpdateStatuses() map[MessageStatus]bool {
+	return map[MessageStatus]bool{
+		MessageStatusPending: true,
+		MessageStatusStarted: true,
+		MessageStatusSuccess: true,
+		MessageStatusWarning: true,
+		MessageStatusError:   true,
+		MessageStatusSkipped: true,
+		MessageStatusUnknown: true,
+	}
 }
 
-var finishedUpdateStatuses = map[MessageStatus]bool{
-	MessageStatusSuccess: true,
-	MessageStatusWarning: true,
-	MessageStatusError:   true,
-	MessageStatusSkipped: true,
-	MessageStatusUnknown: true,
+func getFinishedUpdateStatuses() map[MessageStatus]bool {
+	return map[MessageStatus]bool{
+		MessageStatusSuccess: true,
+		MessageStatusWarning: true,
+		MessageStatusError:   true,
+		MessageStatusSkipped: true,
+		MessageStatusUnknown: true,
+	}
 }
 
 func (ms MessageStatus) IsValid() bool {
-	return validUpdateStatuses[ms]
+	return getValidUpdateStatuses()[ms]
 }
 
 func (ms MessageStatus) IsInProgress() bool {
@@ -39,5 +43,5 @@ func (ms MessageStatus) IsInProgress() bool {
 }
 
 func (ms MessageStatus) IsFinished() bool {
-	return finishedUpdateStatuses[ms]
+	return getFinishedUpdateStatuses()[ms]
 }

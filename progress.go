@@ -9,7 +9,9 @@ import (
 
 type OutputConfig messages.OutputConfig
 
-var DefaultOutputConfig OutputConfig = OutputConfig(messages.DefaultOutputConfig)
+func GetDefaultOutputConfig() OutputConfig {
+	return OutputConfig(messages.GetDefaultOutputConfig())
+}
 
 type Progress struct {
 	store      *messages.MessageStore
