@@ -9,8 +9,10 @@ import (
 
 type OutputConfig messages.OutputConfig
 
-func GetDefaultOutputConfig() OutputConfig {
-	return OutputConfig(messages.GetDefaultOutputConfig())
+// GetDefaultOutputConfig returns pointer to a new instance of default output configuration.
+func GetDefaultOutputConfig() *OutputConfig {
+	config := OutputConfig(messages.GetDefaultOutputConfig())
+	return &config
 }
 
 type Progress struct {
@@ -22,11 +24,15 @@ type Progress struct {
 	doneChan   chan bool
 }
 
-// NewProgress creates new Progress instance.
-func NewProgress(config OutputConfig) *Progress {
+// NewProgress creates new Progress instance. Use nil config for default output configuration.
+func NewProgress(config *OutputConfig) *Progress {
+	if config == nil {
+		config = GetDefaultOutputConfig()
+	}
+
 	return &Progress{
 		store:     messages.NewMessageStore(),
-		renderer:  messages.NewMessageRenderer(messages.OutputConfig(config)),
+		renderer:  messages.NewMessageRenderer(messages.OutputConfig(*config)),
 		errorChan: make(chan error),
 		doneChan:  make(chan bool),
 	}
