@@ -89,7 +89,7 @@ func TestMessageRenderer_RenderMessageStore(t *testing.T) {
 			assert.NoError(t, err)
 
 			err = store.Add(messages.Message{
-				Message:  "Test error (1000s)",
+				Message:  "Test error, 10 % (1000s, % char in message)",
 				Status:   messages.MessageStatusError,
 				Details:  "Error: Short dummy error message",
 				Started:  time.Now().Add(time.Second * -1000),

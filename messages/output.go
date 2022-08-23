@@ -210,7 +210,7 @@ func (cfg OutputConfig) GetMessageText(msg *Message, renderState RenderState) st
 		message = text.Pad(message, maxMessageWidth, ' ')
 	}
 	if cfg.ColorMessage {
-		message = color.Sprintf(message)
+		message = color.Sprint(message)
 	}
 
 	details := ""
