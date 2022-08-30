@@ -17,6 +17,6 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 - Extract and refactor livelog functionality from [UpCloud CLI (`upctl`)](https://github.com/UpCloudLtd/upcloud-cli.git).
 
 
-[Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.0.1...HEAD
 [v1.0.1]: https://github.com/UpCloudLtd/progress/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/UpCloudLtd/progress/releases/tag/v1.0.0
