@@ -180,8 +180,6 @@ func (cfg OutputConfig) formatDetails(msg *Message) string {
 }
 
 func (cfg OutputConfig) GetMessageText(msg *Message, renderState RenderState) string {
-	termWidth := cfg.GetMaxWidth()
-
 	status := ""
 	color := cfg.getStatusColor(msg.Status)
 	if cfg.ShowStatusIndicator {
@@ -203,7 +201,11 @@ func (cfg OutputConfig) GetMessageText(msg *Message, renderState RenderState) st
 	if msg.ProgressMessage != "" {
 		message += " " + msg.ProgressMessage
 	}
-	maxMessageWidth := termWidth - lenFn(status) - lenFn(elapsed)
+	maxMessageWidth := cfg.GetMaxWidth() - lenFn(status) - lenFn(elapsed)
+	// Some terminals initially return 0 width, skip rendering message in that case.
+	if maxMessageWidth < 0 {
+		return ""
+	}
 	if len(message) > maxMessageWidth {
 		message = fmt.Sprintf("%s…", message[:maxMessageWidth-1])
 	} else {

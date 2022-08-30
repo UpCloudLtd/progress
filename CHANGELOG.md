@@ -6,6 +6,9 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ## [Unreleased]
 
+### Fixed
+- Do not try to render message if terminal width is zero. This happens with some terminals on first terminal width get(s).
+
 ## [v1.0.0] - 2022-08-26
 
 ### Added
