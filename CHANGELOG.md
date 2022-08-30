@@ -6,6 +6,8 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ## [Unreleased]
 
+## [v1.0.1] - 2022-08-30
+
 ### Fixed
 - Do not try to render message if terminal width is zero. This happens with some terminals on first terminal width get(s).
 
@@ -16,4 +18,5 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 
 [Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.0.0...HEAD
+[v1.0.1]: https://github.com/UpCloudLtd/progress/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/UpCloudLtd/progress/releases/tag/v1.0.0
