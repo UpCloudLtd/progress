@@ -98,6 +98,14 @@ func TestMessageRenderer_RenderMessageStore(t *testing.T) {
 			assert.NoError(t, err)
 
 			err = store.Add(messages.Message{
+				Message:  "Test\tinvalid\nmessage\twith\ntabs\tand\nnewlines (5s, \\n and \\t chars in message)",
+				Status:   messages.MessageStatusError,
+				Started:  time.Now().Add(time.Second * -5),
+				Finished: time.Now(),
+			})
+			assert.NoError(t, err)
+
+			err = store.Add(messages.Message{
 				Message:  "Test warning (10s, long message) - " + loremIpsum,
 				Status:   messages.MessageStatusWarning,
 				Details:  "Error: Long dummy error message - " + loremIpsum,

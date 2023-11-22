@@ -5,6 +5,7 @@ import (
 	"io"
 	"math"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/UpCloudLtd/progress/terminal"
@@ -17,6 +18,8 @@ type RenderState int
 const (
 	RenderStateDone RenderState = -1
 )
+
+var whitespace = regexp.MustCompile(`\s`)
 
 type OutputConfig struct {
 	DefaultTextWidth            int
@@ -206,6 +209,7 @@ func (cfg OutputConfig) GetMessageText(msg *Message, renderState RenderState) st
 	if maxMessageWidth < 0 {
 		return ""
 	}
+	message = whitespace.ReplaceAllString(message, " ")
 	if len(message) > maxMessageWidth {
 		message = fmt.Sprintf("%s…", message[:maxMessageWidth-1])
 	} else {
