@@ -2,6 +2,7 @@
 [32m✓ [0mTest success (100s)                                                                         [90m 100 s[0m
 [31m✗ [0mTest error, 10 % (1000s, % char in message)                                               [90m > 999 s[0m
   [90mError: Short dummy error message[0m
+[31m✗ [0mTest invalid message with tabs and newlines (5s, \n and \t chars in message)                [90m   5 s[0m
 [33m! [0mTest warning (10s, long message) - Lorem ipsum dolor sit amet, consectetur adipiscing eli…[90m > 999 s[0m
   [90mError: Long dummy error message - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do [0m
   [90meiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud [0m

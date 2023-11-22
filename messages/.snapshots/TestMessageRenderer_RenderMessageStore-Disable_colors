@@ -2,6 +2,7 @@
 ✓ Test success (100s)                                                                          100 s
 ✗ Test error, 10 % (1000s, % char in message)                                                > 999 s
   Error: Short dummy error message
+✗ Test invalid message with tabs and newlines (5s, \n and \t chars in message)                   5 s
 ! Test warning (10s, long message) - Lorem ipsum dolor sit amet, consectetur adipiscing eli… > 999 s
   Error: Long dummy error message - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
