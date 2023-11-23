@@ -3,6 +3,15 @@
 ✗ Test error, 10 % (1000s, % char in message)                                                > 999 s
   Error: Short dummy error message
 ✗ Test invalid message with tabs and newlines (5s, \n and \t chars in message)                   5 s
+✗ Test details with newlines (15s, \n chars in details)                                         15 s
+  Output:
+  
+  + echo 'Details with newlines are assumed to be preformatted. Thus, newline characters should not 
+  be replaced with other whitespace when wrapping the text.'
+  Details with newlines are assumed to be preformatted. Thus, newline characters should not be repla
+  ced with other whitespace when wrapping the text.
+  + cat not-found
+  cat: not-found: No such file or directory
 ! Test warning (10s, long message) - Lorem ipsum dolor sit amet, consectetur adipiscing eli… > 999 s
   Error: Long dummy error message - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 

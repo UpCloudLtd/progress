@@ -3,6 +3,15 @@
 [31mTest error, 10 % (1000s, % char in message)                                                 [0m[90m > 999 s[0m
 [90mError: Short dummy error message[0m
 [31mTest invalid message with tabs and newlines (5s, \n and \t chars in message)                  [0m[90m   5 s[0m
+[31mTest details with newlines (15s, \n chars in details)                                         [0m[90m  15 s[0m
+[90mOutput:[0m
+[90m[0m
+[90m+ echo 'Details with newlines are assumed to be preformatted. Thus, newline characters should not [0m
+[90mbe replaced with other whitespace when wrapping the text.'[0m
+[90mDetails with newlines are assumed to be preformatted. Thus, newline characters should not be repla[0m
+[90mced with other whitespace when wrapping the text.[0m
+[90m+ cat not-found[0m
+[90mcat: not-found: No such file or directory[0m
 [33mTest warning (10s, long message) - Lorem ipsum dolor sit amet, consectetur adipiscing elit,…[0m[90m > 999 s[0m
 [90mError: Long dummy error message - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do [0m
 [90meiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud [0m
