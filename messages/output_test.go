@@ -11,6 +11,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const detailsWithNewlines = `Output:
+
++ echo 'Details with newlines are assumed to be preformatted. Thus, newline characters should not be replaced with other whitespace when wrapping the text.'
+Details with newlines are assumed to be preformatted. Thus, newline characters should not be replaced with other whitespace when wrapping the text.
++ cat not-found
+cat: not-found: No such file or directory`
+
 const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
 func TestMessageRenderer_RenderMessageStore(t *testing.T) {
@@ -93,6 +100,23 @@ func TestMessageRenderer_RenderMessageStore(t *testing.T) {
 				Status:   messages.MessageStatusError,
 				Details:  "Error: Short dummy error message",
 				Started:  time.Now().Add(time.Second * -1000),
+				Finished: time.Now(),
+			})
+			assert.NoError(t, err)
+
+			err = store.Add(messages.Message{
+				Message:  "Test\tinvalid\nmessage\twith\ntabs\tand\nnewlines (5s, \\n and \\t chars in message)",
+				Status:   messages.MessageStatusError,
+				Started:  time.Now().Add(time.Second * -5),
+				Finished: time.Now(),
+			})
+			assert.NoError(t, err)
+
+			err = store.Add(messages.Message{
+				Message:  "Test details with newlines (15s, \\n chars in details)",
+				Status:   messages.MessageStatusError,
+				Details:  detailsWithNewlines,
+				Started:  time.Now().Add(time.Second * -15),
 				Finished: time.Now(),
 			})
 			assert.NoError(t, err)
