@@ -174,7 +174,14 @@ func (cfg OutputConfig) GetMaxHeight() int {
 
 func (cfg OutputConfig) formatDetails(msg *Message) string {
 	wrapWidth := cfg.GetMaxWidth() - 2
-	details := text.WrapSoft(cfg.getDetailsColor().Sprint(msg.Details), wrapWidth)
+
+	var details string
+	// If details contains newline characters, assume that details are preformatted (e.g., stack trace, console output, ...)
+	if strings.Contains(msg.Details, "\n") {
+		details = text.WrapText(cfg.getDetailsColor().Sprint(msg.Details), wrapWidth)
+	} else {
+		details = text.WrapSoft(cfg.getDetailsColor().Sprint(msg.Details), wrapWidth)
+	}
 
 	if cfg.ShowStatusIndicator {
 		return strings.ReplaceAll("\n"+details, "\n", "\n  ")
