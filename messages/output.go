@@ -190,11 +190,13 @@ func (cfg OutputConfig) formatDetails(msg *Message) string {
 }
 
 func (cfg OutputConfig) GetMessageText(msg *Message, renderState RenderState) string {
+	isInteractive := cfg.GetMaxHeight() > 0
+
 	status := ""
 	color := cfg.getStatusColor(msg.Status)
 	if cfg.ShowStatusIndicator {
 		indicator := cfg.getStatusIndicator(msg.Status)
-		if msg.Status.IsInProgress() && cfg.GetMaxHeight() > 0 {
+		if msg.Status.IsInProgress() && isInteractive {
 			indicator = cfg.getInProgressAnimationFrame(renderState)
 		}
 
@@ -208,7 +210,7 @@ func (cfg OutputConfig) GetMessageText(msg *Message, renderState RenderState) st
 
 	lenFn := text.RuneWidthWithoutEscSequences
 	message := msg.Message
-	if msg.ProgressMessage != "" {
+	if isInteractive && msg.ProgressMessage != "" {
 		message += " " + msg.ProgressMessage
 	}
 	maxMessageWidth := cfg.GetMaxWidth() - lenFn(status) - lenFn(elapsed)
