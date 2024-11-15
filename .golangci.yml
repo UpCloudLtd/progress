@@ -143,10 +143,6 @@ linters:
     # using `pkg/errors`, but those are generally moving towards stdlib.
     - errorlint
 
-    # Checks that SQL statements are executed with the appropriate `.Exec` or
-    # `.Query` function.
-    - execinquery
-
     # Checks that switches of enum(-like) types cover every possible case.
     # Very helpful when we need to add new cases to enums, making sure that all
     # the relevant bits are checked. Can become annoying if there's a _lot_ of
@@ -453,10 +449,6 @@ linters:
     # problems.
     - staticcheck
 
-    # Finds unused struct fields, i.e. fields that are not referenced from
-    # anywhere else. Helps remove dead code.
-    - structcheck
-
     # Encourages various opinionated styles and rules including naming.
     # Redundant with `revive`.
     ## - stylecheck # DISABLE
@@ -518,9 +510,6 @@ linters:
 
     # Endorse use of various consts and variables defined in stdlib.
     - usestdlibvars
-
-    # Finds unused global variables and constants. Helps remove dead code.
-    - varcheck
 
     # Variable name length checks, takes definition and use span lengths into
     # account. Nice idea, idiomatic Go, but needs discussion if we want to go

@@ -12,6 +12,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func removeColorsOnWindows(expected string) string {
+	if runtime.GOOS == "windows" {
+		re := regexp.MustCompile("\x1b\\[[0-9]+m")
+		return re.ReplaceAllString(expected, "")
+	}
+	return expected
+}
+
 func TestProgress_Push_ErrorChannel(t *testing.T) {
 	t.Parallel()
 	taskLog := progress.NewProgress(nil)
@@ -74,7 +82,7 @@ func TestProgress_Output(t *testing.T) {
 	err := taskLog.Push(messages.Update{Message: "Test update", Status: messages.MessageStatusStarted})
 	assert.NoError(t, err)
 
-	time.Sleep(time.Millisecond * 100) // Wait for the first render
+	time.Sleep(time.Millisecond * 150) // Wait for the first render
 
 	err = taskLog.Push(messages.Update{Message: "Test update", Status: messages.MessageStatusSuccess})
 	assert.NoError(t, err)
@@ -83,11 +91,29 @@ func TestProgress_Output(t *testing.T) {
 
 	output := buf.String()
 
-	expected := "\x1b[34m> \x1b[0mTest update                                                                                       \n\x1b[32m✓ \x1b[0mTest update                                                                                       \n"
-	if runtime.GOOS == "windows" {
-		re := regexp.MustCompile("\x1b\\[[0-9]+m")
-		expected = re.ReplaceAllString(expected, "")
-	}
+	expected := removeColorsOnWindows("\x1b[34m> \x1b[0mTest update                                                                                       \n\x1b[32m✓ \x1b[0mTest update                                                                                       \n")
+	assert.Equal(t, expected, output)
+}
+
+func TestProgress_NoProgressMessage(t *testing.T) {
+	t.Parallel()
+	cfg := progress.GetDefaultOutputConfig()
+	buf := bytes.NewBuffer(nil)
+	cfg.Target = buf
+
+	taskLog := progress.NewProgress(cfg)
+	taskLog.Start()
+	defer taskLog.Stop()
+
+	err := taskLog.Push(messages.Update{Message: "Test update", Status: messages.MessageStatusStarted})
+	assert.NoError(t, err)
+	err = taskLog.Push(messages.Update{Message: "Test update", ProgressMessage: "(50 %)"})
+	assert.NoError(t, err)
+
+	time.Sleep(time.Millisecond * 150) // Wait for the first render
+	output := buf.String()
+
+	expected := removeColorsOnWindows("\x1b[34m> \x1b[0mTest update                                                                                       \n")
 	assert.Equal(t, expected, output)
 }
 
@@ -109,16 +135,12 @@ func TestProgress_ClosesInProgressMessagesOnStop(t *testing.T) {
 	err = taskLog.Push(messages.Update{Message: "Test pending 2", Status: messages.MessageStatusPending})
 	assert.NoError(t, err)
 
-	time.Sleep(time.Millisecond * 100) // Wait for the first render
+	time.Sleep(time.Millisecond * 150) // Wait for the first render
 
 	taskLog.Stop()
 
 	output := buf.String()
 
-	expected := "\x1b[34m> \x1b[0mTest started                                                                                      \n\x1b[35m- \x1b[0mTest pending 1                                                                                    \n\x1b[35m- \x1b[0mTest pending 2                                                                                    \n\x1b[37m? \x1b[0mTest started                                                                                      \n"
-	if runtime.GOOS == "windows" {
-		re := regexp.MustCompile("\x1b\\[[0-9]+m")
-		expected = re.ReplaceAllString(expected, "")
-	}
+	expected := removeColorsOnWindows("\x1b[34m> \x1b[0mTest started                                                                                      \n\x1b[35m- \x1b[0mTest pending 1                                                                                    \n\x1b[35m- \x1b[0mTest pending 2                                                                                    \n\x1b[37m? \x1b[0mTest started                                                                                      \n")
 	assert.Equal(t, expected, output)
 }
