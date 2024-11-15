@@ -6,6 +6,8 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ## [Unreleased]
 
+## [v1.0.3] - 2024-11-15
+
 ### Fixed
 
 - Do not output `ProgressMessage` to non-interactive terminals. This avoids including a progress update in the started message that is printed to non-interactive terminals.
@@ -29,7 +31,8 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Extract and refactor livelog functionality from [UpCloud CLI (`upctl`)](https://github.com/UpCloudLtd/upcloud-cli.git).
 
-[Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.0.3...HEAD
+[v1.0.3]: https://github.com/UpCloudLtd/progress/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/UpCloudLtd/progress/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/UpCloudLtd/progress/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/UpCloudLtd/progress/releases/tag/v1.0.0
