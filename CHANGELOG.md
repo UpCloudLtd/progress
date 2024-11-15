@@ -12,7 +12,7 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Do not output `ProgressMessage` to non-interactive terminals. This avoids including a progress update in the started message that is printed to non-interactive terminals.
 
-## [v1.0.2] - 2022-11-23
+## [v1.0.2] - 2023-11-23
 
 ### Fixed
 
