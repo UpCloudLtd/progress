@@ -1,6 +1,7 @@
 # Progress
 
 [![Test](https://github.com/UpCloudLtd/progress/actions/workflows/test.yml/badge.svg)](https://github.com/UpCloudLtd/progress/actions/workflows/test.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/UpCloudLtd/progress/badge)](https://scorecard.dev/viewer/?uri=github.com%2FUpCloudLtd%2Fprogress)
 
 Go module for printing progress/task status of command line applications.
 
