@@ -27,7 +27,7 @@ func IsWindowsTerminal(target io.Writer) bool {
 	return term.IsTerminal(int(file.Fd()))
 }
 
-// IsUnicodeSafeWindowsTermProgram determines if current terminal program is likely able to output unicode characteres. Terminal program is determined from TERM_PROGRAM environment variable.
+// IsUnicodeSafeWindowsTermProgram determines if current terminal program is likely able to output unicode characters. Terminal program is determined from TERM_PROGRAM environment variable.
 func IsUnicodeSafeWindowsTermProgram() bool {
 	termProg := os.Getenv("TERM_PROGRAM")
 	return getUnicodeSafeWindowsTermPrograms()[termProg]

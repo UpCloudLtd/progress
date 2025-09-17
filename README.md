@@ -48,7 +48,7 @@ taskLog.Push(messages.Update{
 })
 ```
 
-An update can contain four different fileds: `Key`, `Message`, `Status`, and `Details`. When updating progress message that does not yet exist, `Message` and `Status` are required.
+An update can contain four different fields: `Key`, `Message`, `Status`, and `Details`. When updating progress message that does not yet exist, `Message` and `Status` are required.
 
 Field   | Description
 ------- | -----------
