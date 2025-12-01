@@ -68,7 +68,7 @@ func (p *Progress) Start() {
 	go p.run()
 }
 
-// Push updates to the progress log. Errors if called before start or if called with an invalid update. Panics if called after Close.
+// Push updates to the progress log. Errors if called before Start or if called with an invalid update. Panics if called after Stop.
 func (p Progress) Push(update messages.Update) error {
 	if p.updateChan == nil {
 		return fmt.Errorf("can not push updates into progress log that has not been started")
