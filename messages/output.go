@@ -37,6 +37,7 @@ type OutputConfig struct {
 	ColorMessage                bool
 	StopWatchcolor              Color
 	ShowStopwatch               bool
+	DisableAnimations           bool
 	Target                      io.Writer
 }
 
@@ -73,6 +74,7 @@ func GetDefaultOutputConfig() OutputConfig {
 		ColorMessage:                false,
 		StopWatchcolor:              text.FgHiBlack,
 		ShowStopwatch:               true,
+		DisableAnimations:           false,
 		Target:                      os.Stderr,
 	}
 }
@@ -157,6 +159,12 @@ func (cfg OutputConfig) getDimensions() (int, int) {
 	if err != nil {
 		return cfg.DefaultTextWidth, 0
 	}
+
+	// We use zero height to detect non interactive output. Set height to zero also when animations are disabled to render started rows instead of animations.
+	if cfg.DisableAnimations {
+		height = 0
+	}
+
 	return width, height
 }
 
