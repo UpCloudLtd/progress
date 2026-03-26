@@ -20,6 +20,7 @@ type Progress struct {
 	renderer   *messages.MessageRenderer
 	updateChan chan messages.Update
 	errorChan  chan error
+	renderChan chan bool
 	stopChan   chan bool
 	doneChan   chan bool
 }
@@ -31,28 +32,35 @@ func NewProgress(config *OutputConfig) *Progress {
 	}
 
 	return &Progress{
-		store:     messages.NewMessageStore(),
-		renderer:  messages.NewMessageRenderer(messages.OutputConfig(*config)),
-		errorChan: make(chan error),
-		doneChan:  make(chan bool),
+		store:      messages.NewMessageStore(),
+		renderer:   messages.NewMessageRenderer(messages.OutputConfig(*config)),
+		errorChan:  make(chan error),
+		doneChan:   make(chan bool),
 	}
 }
 
-func (p Progress) run() {
+func (p *Progress) onRender() {
+	if p.renderChan != nil {
+		p.renderChan <- true
+	}
+}
+
+func (p *Progress) run() {
 	ticker := time.NewTicker(time.Millisecond * 95)
 	defer ticker.Stop()
-
 	for {
 		select {
 		case <-p.stopChan:
 			p.store.Close()
 			p.renderer.RenderMessageStore(p.store)
+			p.onRender()
 			p.doneChan <- true
 			return
 		case update := <-p.updateChan:
 			p.errorChan <- p.store.Push(update)
 		case <-ticker.C:
 			p.renderer.RenderMessageStore(p.store)
+			p.onRender()
 		}
 	}
 }
@@ -76,6 +84,16 @@ func (p Progress) Push(update messages.Update) error {
 
 	p.updateChan <- update
 	return <-p.errorChan
+}
+
+func (p *Progress) WaitForRender() {
+	if p.renderChan != nil {
+		panic("can not wait for render more than once")
+	}
+
+	p.renderChan = make(chan bool)
+	<-p.renderChan
+	p.renderChan = nil
 }
 
 // Stop the goroutine handling progress logging and render the final progress state. Panics if called before start or more than once.

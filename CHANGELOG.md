@@ -6,6 +6,10 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ## [Unreleased]
 
+### Added
+
+- Add `WaitForRender` method for ensuring that other logging is done after start message when non-interactive output is used.
+
 ## [v1.1.0] - 2025-12-30
 
 ### Added
