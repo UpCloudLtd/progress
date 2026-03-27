@@ -2,6 +2,7 @@ package progress_test
 
 import (
 	"bytes"
+	"fmt"
 	"regexp"
 	"runtime"
 	"testing"
@@ -143,4 +144,45 @@ func TestProgress_ClosesInProgressMessagesOnStop(t *testing.T) {
 
 	expected := removeColorsOnWindows("\x1b[34m> \x1b[0mTest started                                                                                      \n\x1b[35m- \x1b[0mTest pending 1                                                                                    \n\x1b[35m- \x1b[0mTest pending 2                                                                                    \n\x1b[37m? \x1b[0mTest started                                                                                      \n")
 	assert.Equal(t, expected, output)
+}
+
+func TestProgress_WaitForRender(t *testing.T) {
+	t.Parallel()
+
+	for _, wait := range []bool{true, false} {
+		wait := wait
+
+		t.Run(fmt.Sprintf("%t", wait), func(t *testing.T) {
+			t.Parallel()
+
+			cfg := progress.GetDefaultOutputConfig()
+			buf := bytes.NewBuffer(nil)
+			cfg.Target = buf
+
+			taskLog := progress.NewProgress(cfg)
+			taskLog.Start()
+			defer taskLog.Stop()
+
+			err := taskLog.Push(messages.Update{Message: "Test update", Status: messages.MessageStatusStarted})
+			assert.NoError(t, err)
+
+			if wait {
+				taskLog.WaitForRender()
+			}
+			fmt.Fprintf(buf, "Printed outside progress logging\n")
+
+			err = taskLog.Push(messages.Update{Message: "Test update", Status: messages.MessageStatusSuccess})
+			assert.NoError(t, err)
+
+			taskLog.WaitForRender()
+			output := buf.String()
+
+			expected := removeColorsOnWindows("\x1b[34m> \x1b[0mTest update                                                                                       \nPrinted outside progress logging\n\x1b[32m✓ \x1b[0mTest update                                                                                       \n")
+			if wait {
+				assert.Equal(t, expected, output)
+			} else {
+				assert.NotEqual(t, expected, output)
+			}
+		})
+	}
 }
