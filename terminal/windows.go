@@ -24,7 +24,7 @@ func IsWindowsTerminal(target io.Writer) bool {
 		return false
 	}
 
-	return term.IsTerminal(int(file.Fd()))
+	return term.IsTerminal(int(file.Fd())) // #nosec G115 -- File-descriptor should be safe to convert into int.
 }
 
 // IsUnicodeSafeWindowsTermProgram determines if current terminal program is likely able to output unicode characters. Terminal program is determined from TERM_PROGRAM environment variable.

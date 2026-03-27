@@ -32,10 +32,10 @@ func NewProgress(config *OutputConfig) *Progress {
 	}
 
 	return &Progress{
-		store:      messages.NewMessageStore(),
-		renderer:   messages.NewMessageRenderer(messages.OutputConfig(*config)),
-		errorChan:  make(chan error),
-		doneChan:   make(chan bool),
+		store:     messages.NewMessageStore(),
+		renderer:  messages.NewMessageRenderer(messages.OutputConfig(*config)),
+		errorChan: make(chan error),
+		doneChan:  make(chan bool),
 	}
 }
 
@@ -86,6 +86,7 @@ func (p Progress) Push(update messages.Update) error {
 	return <-p.errorChan
 }
 
+// Wait until the messages are next rendered. Supports only one call at a time. I.e., panics if called more than once in parallel.
 func (p *Progress) WaitForRender() {
 	if p.renderChan != nil {
 		panic("can not wait for render more than once")

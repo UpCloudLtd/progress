@@ -155,7 +155,7 @@ func (cfg OutputConfig) getDimensions() (int, int) {
 		return cfg.DefaultTextWidth, 0
 	}
 
-	width, height, err := term.GetSize(int(file.Fd()))
+	width, height, err := term.GetSize(int(file.Fd())) // #nosec G115 -- File-descriptor should be safe to convert into int.
 	if err != nil {
 		return cfg.DefaultTextWidth, 0
 	}
