@@ -156,7 +156,7 @@ func (ms *MessageStore) Push(update Update) error {
 
 // ListInprogress lists in-progress messages in MessageStore sorted by started time.
 func (ms *MessageStore) ListInProgress() []*Message {
-	messages := []*Message{}
+	messages := make([]*Message, 0, len(ms.inProgress))
 	for _, msg := range ms.inProgress {
 		messages = append(messages, msg)
 	}

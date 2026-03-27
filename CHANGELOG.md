@@ -6,6 +6,12 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ## [Unreleased]
 
+## [v1.2.0] - 2026-03-27
+
+### Added
+
+- Add `WaitForRender` method for ensuring that other logging is done after start message when non-interactive output is used.
+
 ## [v1.1.0] - 2025-12-30
 
 ### Added
@@ -37,7 +43,8 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Extract and refactor livelog functionality from [UpCloud CLI (`upctl`)](https://github.com/UpCloudLtd/upcloud-cli.git).
 
-[Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.2.0...HEAD
+[v1.2.0]: https://github.com/UpCloudLtd/progress/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/UpCloudLtd/progress/compare/v1.0.3...v1.1.0
 [v1.0.3]: https://github.com/UpCloudLtd/progress/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/UpCloudLtd/progress/compare/v1.0.1...v1.0.2
