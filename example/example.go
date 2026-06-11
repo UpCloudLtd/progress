@@ -3,6 +3,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/UpCloudLtd/progress"
@@ -25,6 +27,14 @@ func main() {
 	taskLog.Start()
 	defer taskLog.Stop()
 
+	parallelCount := 1
+	if len(os.Args) > 1 {
+		n, err := strconv.Atoi(os.Args[1])
+		if err == nil && n > 0 {
+			parallelCount = n
+		}
+	}
+
 	_ = taskLog.Push(messages.Update{
 		Key:     firstKey,
 		Message: "Progress is a library for communicating CLI app progress to the user",
@@ -33,11 +43,13 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	_ = taskLog.Push(messages.Update{
-		Key:     parallelKey,
-		Message: "There can be multiple active progress messages at once",
-		Status:  messages.MessageStatusStarted,
-	})
+	for i := 0; i < parallelCount; i++ {
+		_ = taskLog.Push(messages.Update{
+			Key:     fmt.Sprintf("%s-%02d", parallelKey, i),
+			Message: "There can be multiple active progress messages at once",
+			Status:  messages.MessageStatusStarted,
+		})
+	}
 
 	_ = taskLog.Push(messages.Update{
 		Key:     progressKey,
@@ -67,11 +79,20 @@ func main() {
 
 	time.Sleep(time.Millisecond * 1500)
 
-	_ = taskLog.Push(messages.Update{
-		Key:     parallelKey,
-		Status:  messages.MessageStatusError,
-		Details: "Error: Message details can be used, for example, to communicate error messages to the user.",
-	})
+	for i := 0; i < parallelCount; i++ {
+		status := messages.MessageStatusSuccess
+		details := ""
+		if i == 0 {
+			status = messages.MessageStatusError
+			details = "Message details can be used, for example, to communicate error messages to the user."
+		}
+
+		_ = taskLog.Push(messages.Update{
+			Key:     fmt.Sprintf("%s-%02d", parallelKey, i),
+			Status:  status,
+			Details: details,
+		})
+	}
 
 	time.Sleep(time.Millisecond * 1500)
 
