@@ -56,6 +56,8 @@ linters:
   settings:
     errcheck:
       check-type-assertions: true
+    goconst:
+      ignore-tests: true
     gocritic:
       disabled-checks:
         - commentFormatting
