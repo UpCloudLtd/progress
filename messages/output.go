@@ -165,6 +165,11 @@ func (cfg OutputConfig) getDimensions() (int, int) {
 		height = 0
 	}
 
+	// Reserve one (empty) line for '\n' printed after the last in-progress message.
+	if height > 0 {
+		height -= 1
+	}
+
 	return width, height
 }
 

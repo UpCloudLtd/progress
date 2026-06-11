@@ -6,6 +6,12 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ## [Unreleased]
 
+## [v1.2.1] - 2026-06-09
+
+### Fixed
+
+- Reserve one (empty) line for `\n` printed after the last in-progress message.
+
 ## [v1.2.0] - 2026-03-27
 
 ### Added
@@ -43,7 +49,8 @@ The format is based on [keep a changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Extract and refactor livelog functionality from [UpCloud CLI (`upctl`)](https://github.com/UpCloudLtd/upcloud-cli.git).
 
-[Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/UpCloudLtd/progress/compare/v1.2.1...HEAD
+[v1.2.1]: https://github.com/UpCloudLtd/progress/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/UpCloudLtd/progress/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/UpCloudLtd/progress/compare/v1.0.3...v1.1.0
 [v1.0.3]: https://github.com/UpCloudLtd/progress/compare/v1.0.2...v1.0.3
